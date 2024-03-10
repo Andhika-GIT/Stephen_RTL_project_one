@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import UserForm from './UserForm';
 
 test('shows two inputs and a button', () => {
@@ -17,9 +17,13 @@ test('shows two inputs and a button', () => {
 
 test('should call onUserAdd callback when the form is submitting', async () => {
   // 1. not the best implementation
+  const argList = [];
+  const callback = (...args) => {
+    argList.push(args);
+  };
 
   // try to render component
-  render(<UserForm />);
+  render(<UserForm onUserAdd={callback} />);
 
   // Find two inputs
   const [nameInput, emailInput] = screen.getAllByRole('textbox');
@@ -36,7 +40,9 @@ test('should call onUserAdd callback when the form is submitting', async () => {
   const button = screen.getByRole('button');
 
   // simulate clicking submit button
-  userEvent.click(button);
+  await userEvent.click(button);
 
   // assertion - make sure the component is doing what we expect it to do
+  expect(argList).toHaveLength(1);
+  expect(argList[0][0]).toEqual({ name: 'jane', email: 'jane@email.com' });
 });
