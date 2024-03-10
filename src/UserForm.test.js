@@ -16,14 +16,11 @@ test('shows two inputs and a button', () => {
 });
 
 test('should call onUserAdd callback when the form is submitting', async () => {
-  // 1. not the best implementation
-  const argList = [];
-  const callback = (...args) => {
-    argList.push(args);
-  };
+  // use jest mock function, to make sure that the function props is called
+  const mock = jest.fn();
 
   // try to render component
-  render(<UserForm onUserAdd={callback} />);
+  render(<UserForm onUserAdd={mock} />);
 
   // Find two inputs
   const [nameInput, emailInput] = screen.getAllByRole('textbox');
@@ -43,6 +40,6 @@ test('should call onUserAdd callback when the form is submitting', async () => {
   await userEvent.click(button);
 
   // assertion - make sure the component is doing what we expect it to do
-  expect(argList).toHaveLength(1);
-  expect(argList[0][0]).toEqual({ name: 'jane', email: 'jane@email.com' });
+  expect(mock).toHaveBeenCalled();
+  expect(mock).toHaveBeenCalledWith({ name: 'jane', email: 'jane@email.com' });
 });
