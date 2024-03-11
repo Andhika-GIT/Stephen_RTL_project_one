@@ -13,10 +13,12 @@ test('render one row per user', () => {
       email: 'sam@email.com',
     },
   ];
-  render(<UserList users={users} />);
+
+  const { container } = render(<UserList users={users} />);
 
   // find all rows in the table
-  const rows = within(screen.getByTestId('users')).getAllByRole('row');
+  // eslint-disable-next-line
+  const rows = container.querySelectorAll('tbody tr');
 
   expect(rows).toHaveLength(2);
 });
