@@ -49,3 +49,29 @@ test('should call onUserAdd callback when the form is submitting', async () => {
   expect(mock).toHaveBeenCalled();
   expect(mock).toHaveBeenCalledWith({ name: 'jane', email: 'jane@email.com' });
 });
+
+test('name and email input should be cleared after form is submitted', async () => {
+  render(<UserForm onUserAdd={() => {}} />);
+
+  const nameInput = screen.getByRole('textbox', {
+    name: /name/i,
+  });
+
+  const emailInput = screen.getByRole('textbox', {
+    name: /email/i,
+  });
+
+  const submitButton = screen.getByRole('button');
+
+  await userEvent.click(nameInput);
+  await userEvent.keyboard('herman');
+
+  await userEvent.click(emailInput);
+  await userEvent.keyboard('herman@email.com');
+
+  await userEvent.click(submitButton);
+
+  // Assertion -> expect the name and email input is cleared after form submit
+  expect(nameInput).toHaveValue('');
+  expect(emailInput).toHaveValue('');
+});
