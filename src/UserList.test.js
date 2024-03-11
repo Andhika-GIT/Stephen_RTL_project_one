@@ -22,3 +22,27 @@ test('render one row per user', () => {
 
   expect(rows).toHaveLength(2);
 });
+
+test('render the name and email of each user', () => {
+  // render component
+  const users = [
+    {
+      name: 'jane',
+      email: 'jane@email.com',
+    },
+    {
+      name: 'sam',
+      email: 'sam@email.com',
+    },
+  ];
+
+  render(<UserList users={users} />);
+
+  for (let user of users) {
+    const name = screen.getByRole('cell', { name: user.name });
+    const email = screen.getByRole('cell', { name: user.email });
+
+    expect(name).toBeInTheDocument();
+    expect(email).toBeInTheDocument();
+  }
+});
